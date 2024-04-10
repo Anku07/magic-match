@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import SingleCard from "./components/SingleCard";
+
 const cardImages = [
   { src: "/img/helmet-1.png", matched: false },
   { src: "/img/potion-1.png", matched: false },
@@ -9,11 +10,13 @@ const cardImages = [
   { src: "/img/shield-1.png", matched: false },
   { src: "/img/sword-1.png", matched: false },
 ];
+
 function App() {
   const [cards, setCards] = useState([]);
   const [turns, setTurns] = useState(0);
   const [choiceOne, setChoiceOne] = useState(null);
   const [choiceTwo, setChoiceTwo] = useState(null);
+  const [disabled, setdisabled] = useState(false);
   // shuffle cards
   const shuffleCards = () => {
     const shuffledCards = [...cardImages, ...cardImages]
@@ -26,8 +29,10 @@ function App() {
   const handleChoice = (card) => {
     choiceOne ? setChoiceTwo(card) : setChoiceOne(card);
   };
+
   //compare 2 selected cards
   useEffect(() => {
+    setdisabled(true)
     if (choiceOne && choiceTwo) {
       if (choiceOne.src === choiceTwo.src) {
         setCards((prevCards) => {
@@ -46,11 +51,13 @@ function App() {
     }
   }, [choiceOne, choiceTwo]);
   console.log(cards);
+
   //reset choices & increase turn
   const resetTurn = () => {
     setChoiceOne(null);
     setChoiceTwo(null);
     setTurns((prevturns) => prevturns + 1);
+    setdisabled(false)
   };
 
   return (
@@ -64,6 +71,7 @@ function App() {
             card={card}
             handleChoice={handleChoice}
             flipped={card === choiceOne || card === choiceTwo || card.matched}
+            disabled = {disabled}
           />
         ))}
       </div>
